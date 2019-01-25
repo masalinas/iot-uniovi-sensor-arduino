@@ -24,6 +24,7 @@
 
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
+#include <SparkFun_RHT03.h>
 
 // WIFI values suitable for your network.
 const char* WIFI_SSID = "Thingtrack";
@@ -40,22 +41,33 @@ const char* MQTT_DEVICE_TOPIC = "devices/ARD01";
 const char* MQTT_VALUE = "69";
 const int MQTT_FRECUENCY = 5000;
 
+// RHT03 Sensor values suitable
+const int RHT03_DATA_PIN = D4; // RHT03 data pin
+const int RHT03_HUMIDITY = 0;
+const int RHT03_TEMPERATURE_C = 1;
+const int RHT03_TEMPERATURE_F = 2;
+
 WiFiClient espClient;
 PubSubClient client(espClient);
 
 long lastMsg = 0;
 char msg[50];
 int value = 0;
+RHT03 rht;
 
 void setup() {
   pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
   
-  Serial.begin(115200);
+  Serial.begin(9600);
   
   setup_wifi();
   
   client.setServer(MQTT_HOST, MQTT_PORT);
   client.setCallback(callback);
+
+  // Call rht.begin() to initialize the sensor and our data pin
+  rht.begin(RHT03_DATA_PIN);
+  Serial.println("RHT03 configured");
 }
 
 void setup_wifi() {
@@ -100,6 +112,35 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
 }
 
+float* getSensorData() {  
+  // Call rht.update() to get new humidity and temperature values from the sensor.
+  int updateRet = rht.update();
+  
+  // If successful, the update() function will return 1.
+  // If update fails, it will return a value <0
+  float data[3];
+  if (updateRet == 1) {
+      Serial.println("RHT03 pin updated");
+      
+      // Now print the values:
+      Serial.println("Humidity: " + String(rht.humidity(), 1) + " %");
+      Serial.println("Temp (C): " + String(rht.tempC(), 1) + " deg C");
+      Serial.println("Temp (F): " + String(rht.tempF(), 1) + " deg F");
+      
+      data[0] = rht.humidity();
+      data[1] = rht.tempC();
+      data[2] = rht.tempF();
+  } 
+  else {
+    Serial.println("RH03 retry update");
+    
+    // If the update failed, try delaying for RHT_READ_INTERVAL_MS ms before trying again.
+    delay(RHT_READ_INTERVAL_MS);
+  }
+
+  return data;
+}
+
 void reconnect() {
   // Loop until we're reconnected
   while (!client.connected()) {
@@ -138,14 +179,20 @@ void loop() {
   long now = millis();
   if (now - lastMsg > 2000) {
     lastMsg = now;
-    
-    long value = random(0, 40);
-    String meassure = String(value);
-    
-    Serial.println(meassure);
 
-    char charMeassure[10] = "";
-    meassure.toCharArray(charMeassure, 10);
+    //long value = random(0, 45);
+    //String meassure = String(value);
+
+    // get sensor Data
+    float *value = getSensorData();    
+
+    // convert float to array char and send
+    String meassureH = String(*(value + RHT03_HUMIDITY));
+    String meassureTC = String(*(value + RHT03_TEMPERATURE_C));
+    String meassureTF = String(*(value + RHT03_TEMPERATURE_F));
+
+    char charMeassure[10];
+    meassureTC.toCharArray(charMeassure, 10);
     client.publish(MQTT_SENSOR_TOPIC, charMeassure);
   }
 }
