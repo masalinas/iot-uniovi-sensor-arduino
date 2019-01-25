@@ -25,10 +25,20 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
-// Update these with values suitable for your network.
-const char* ssid = "QH";
-const char* password = "underground";
-const char* mqtt_server = "192.168.1.34";
+// WIFI values suitable for your network.
+const char* WIFI_SSID = "Thingtrack";
+const char* WIFI_PASSWORD = "234803685";
+
+// MQTT values suitable for your network.
+const char* MQTT_HOST = "192.168.1.19";
+const int MQTT_PORT = 1885;
+const char* MQTT_USERNAME = "admin";
+const char* MQTT_PASSWORD = "uniovi";
+const char* MQTT_CLIENT_ID = "ARD01";
+const char* MQTT_SENSOR_TOPIC = "sensors/temperature";
+const char* MQTT_DEVICE_TOPIC = "devices/ARD01";
+const char* MQTT_VALUE = "69";
+const int MQTT_FRECUENCY = 5000;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -44,7 +54,7 @@ void setup() {
   
   setup_wifi();
   
-  client.setServer(mqtt_server, 1883);
+  client.setServer(MQTT_HOST, MQTT_PORT);
   client.setCallback(callback);
 }
 
@@ -54,9 +64,9 @@ void setup_wifi() {
   // We start by connecting to a WiFi network
   Serial.println();
   Serial.print("Connecting to ");
-  Serial.println(ssid);
+  Serial.println(WIFI_SSID);
 
-  WiFi.begin(ssid, password);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -96,21 +106,24 @@ void reconnect() {
     Serial.print("Attempting MQTT connection...");
     
     // Attempt to connect
-    if (client.connect("ESP8266Client")) {
+    if (client.connect(MQTT_CLIENT_ID, MQTT_USERNAME, MQTT_PASSWORD)) {
       Serial.println("connected");
       
       // Once connected, publish an announcement...
-      client.publish("outTopic", "hello world");
+      client.publish(MQTT_SENSOR_TOPIC, MQTT_VALUE);
       
       // ... and resubscribe
-      client.subscribe("inTopic");
+      client.subscribe(MQTT_DEVICE_TOPIC);
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
+      String mess = "try again in ";
+      mess.concat(MQTT_FRECUENCY);
+      mess.concat(" seconds"); 
+      Serial.println(mess);
       
-      // Wait 5 seconds before retrying
-      delay(5000);
+      // Wait MQTT_FRECUENCY seconds before retrying
+      delay(MQTT_FRECUENCY);
     }
   }
 }
@@ -125,11 +138,14 @@ void loop() {
   long now = millis();
   if (now - lastMsg > 2000) {
     lastMsg = now;
-    ++value;
-    snprintf (msg, 75, "hello world #%ld", value);
-    Serial.print("Publish message: ");
-    Serial.println(msg);
     
-    client.publish("outTopic", msg);
+    long value = random(0, 40);
+    String meassure = String(value);
+    
+    Serial.println(meassure);
+
+    char charMeassure[10] = "";
+    meassure.toCharArray(charMeassure, 10);
+    client.publish(MQTT_SENSOR_TOPIC, charMeassure);
   }
 }
