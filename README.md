@@ -12,5 +12,11 @@ Example:
 
 # Arduino dependencies: install knolleary/pubsubclient MQTT Arduino client:
 
-* Start Arduino and open Include Libraries -> Add Library from ZIP File menu.
-* Select the previous zip library file: pubsubclient-2.7.zip
+* Download pubsubclient-2.7.zip from https://github.com/knolleary/pubsubclient.
+* Start Arduino and open Include Libraries -> Add Library from ZIP File menu and select previous zip library
+
+
+# Arduino dependencies: install sparkfun/SparkFun_RHT03_Arduino_Library RHT03 Arduino driver
+
+* Download SparkFun_RHT03_Arduino_Library-V_1.0.0.zip from https://github.com/sparkfun/SparkFun_RHT03_Arduino_Library
+* Start Arduino and open Include Libraries -> Add Library from ZIP File menu and select previous zip library
