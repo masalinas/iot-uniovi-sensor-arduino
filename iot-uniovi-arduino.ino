@@ -25,18 +25,23 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include <SparkFun_RHT03.h>
+#include <ArduinoJson.h>
+#include <DS1302.h>
 
 // WIFI values suitable for your network.
-const char* WIFI_SSID = "Thingtrack";
-const char* WIFI_PASSWORD = "234803685";
+//const char* WIFI_SSID = "Thingtrack";
+//const char* WIFI_PASSWORD = "234803685";
+const char* WIFI_SSID = "QH";
+const char* WIFI_PASSWORD = "underground";
 
 // MQTT values suitable for your network.
-const char* MQTT_HOST = "192.168.1.19";
+const char* MQTT_HOST = "192.168.1.34";
 const int MQTT_PORT = 1885;
 const char* MQTT_USERNAME = "admin";
 const char* MQTT_PASSWORD = "uniovi";
 const char* MQTT_CLIENT_ID = "ARD01";
-const char* MQTT_SENSOR_TOPIC = "sensors/temperature";
+const char* MQTT_TOPIC_SENSOR_TP01 = "uniovi/poc/temperature/TP01";
+const char* MQTT_TOPIC_SENSOR_RH01 = "uniovi/poc/humidity/RH01";
 const char* MQTT_DEVICE_TOPIC = "devices/ARD01";
 const char* MQTT_VALUE = "69";
 const int MQTT_FRECUENCY = 5000;
@@ -55,8 +60,16 @@ char msg[50];
 int value = 0;
 RHT03 rht;
 
+const int kCePin   = D1;  // Chip Enable
+const int kIoPin   = D2;  // Input/Output
+const int kSclkPin = D3;  // Serial Clock
+
+// Create a DS1302 object.
+DS1302 rtc(kCePin, kIoPin, kSclkPin); 
+
 void setup() {
-  pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
+  // Initialize the BUILTIN_LED pin as an output
+  pinMode(BUILTIN_LED, OUTPUT);
   
   Serial.begin(9600);
   
@@ -65,6 +78,8 @@ void setup() {
   client.setServer(MQTT_HOST, MQTT_PORT);
   client.setCallback(callback);
 
+  setup_time();
+                 
   // Call rht.begin() to initialize the sensor and our data pin
   rht.begin(RHT03_DATA_PIN);
   Serial.println("RHT03 configured");
@@ -89,6 +104,21 @@ void setup_wifi() {
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
+}
+
+void setup_time() {
+// Initialize a new chip by turning off write protection and clearing the
+  // clock halt flag. These methods needn't always be called. See the DS1302
+  // datasheet for details.
+  rtc.writeProtect(false);
+  rtc.halt(false);
+
+  // Make a new time object to set the date and time.
+  // Saturday, Februry 23, 2019 at 10:45:00.
+  //Time t(2019, 2, 23, 10, 54, 00, Time::kSaturday);
+
+  // Set the time and date on the chip.
+  //rtc.time(t);
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
@@ -151,7 +181,7 @@ void reconnect() {
       Serial.println("connected");
       
       // Once connected, publish an announcement...
-      client.publish(MQTT_SENSOR_TOPIC, MQTT_VALUE);
+      //client.publish(MQTT_SENSOR_TOPIC, MQTT_VALUE);
       
       // ... and resubscribe
       client.subscribe(MQTT_DEVICE_TOPIC);
@@ -179,20 +209,58 @@ void loop() {
   long now = millis();
   if (now - lastMsg > 2000) {
     lastMsg = now;
+        
+    // Get the current time and date from the chip.
+    Time t = rtc.time();
 
-    //long value = random(0, 45);
-    //String meassure = String(value);
-
+    // Format the time and date and insert into the temporary buffer.
+    char datetime[50];
+    snprintf(datetime, sizeof(datetime), "%04d-%02d-%02dT%02d:%02d:%02d", t.yr, t.mon, t.date, t.hr, t.min, t.sec);
+  
+    // Print the formatted string to serial so we can see the time.
+    Serial.println(datetime);
+  
     // get sensor Data
     float *value = getSensorData();    
 
     // convert float to array char and send
-    String meassureH = String(*(value + RHT03_HUMIDITY));
+    String meassureRH = String(*(value + RHT03_HUMIDITY));
     String meassureTC = String(*(value + RHT03_TEMPERATURE_C));
     String meassureTF = String(*(value + RHT03_TEMPERATURE_F));
 
     char charMeassure[10];
+
+    StaticJsonBuffer<300> JSONbuffer;
+    char sensorJSONmessageBuffer[100];
+    
+    // publish humidity JSON value
+    meassureRH.toCharArray(charMeassure, 10);
+
+    JsonObject& humidityJSON = JSONbuffer.createObject();
+    
+    humidityJSON["device"] = "RH01";
+    humidityJSON["value"] = charMeassure;
+    humidityJSON["date"] = datetime;
+
+    humidityJSON.printTo(sensorJSONmessageBuffer, sizeof(sensorJSONmessageBuffer));
+    //String input = "{\"device\":\"RH01\",\"time\":1351824120,\"value\":" + charMeassure + "]}";
+      
+    client.publish(MQTT_TOPIC_SENSOR_RH01, sensorJSONmessageBuffer);
+    //client.publish(MQTT_TOPIC_SENSOR_RH01, charMeassure);
+        
+    // publish temperature JSON value
     meassureTC.toCharArray(charMeassure, 10);
-    client.publish(MQTT_SENSOR_TOPIC, charMeassure);
+
+    JsonObject& temperatureJSON = JSONbuffer.createObject();
+    
+    temperatureJSON["device"] = "TP01";
+    temperatureJSON["value"] = charMeassure;
+    temperatureJSON["date"] = datetime;
+
+    temperatureJSON.printTo(sensorJSONmessageBuffer, sizeof(sensorJSONmessageBuffer));
+    //String input = "{\"device\":\"TP01\",\"time\":1351824120,\"value\":" + charMeassure + "]}";
+    
+    client.publish(MQTT_TOPIC_SENSOR_TP01, sensorJSONmessageBuffer);
+    //client.publish(MQTT_TOPIC_SENSOR_TP01, charMeassure);   
   }
 }
