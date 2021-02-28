@@ -31,10 +31,8 @@
 // WIFI values suitable for your network.
 //const char* WIFI_SSID = "Thingtrack";
 //const char* WIFI_PASSWORD = "234803685";
-//const char* WIFI_SSID = "maiind";
-//const char* WIFI_PASSWORD = "tullavealfuturo";
-const char* WIFI_SSID = "MOVISTAR_0849";
-const char* WIFI_PASSWORD = "Uufiyu7Wv3QGfegf8TkY";
+const char* WIFI_SSID = "maiind";
+const char* WIFI_PASSWORD = "tullavealfuturo";
 
 // MQTT values suitable for your network.
 const char* MQTT_HOST = "192.168.1.38";
