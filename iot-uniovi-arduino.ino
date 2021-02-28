@@ -31,12 +31,14 @@
 // WIFI values suitable for your network.
 //const char* WIFI_SSID = "Thingtrack";
 //const char* WIFI_PASSWORD = "234803685";
-const char* WIFI_SSID = "QH";
-const char* WIFI_PASSWORD = "underground";
+//const char* WIFI_SSID = "maiind";
+//const char* WIFI_PASSWORD = "tullavealfuturo";
+const char* WIFI_SSID = "MOVISTAR_0849";
+const char* WIFI_PASSWORD = "Uufiyu7Wv3QGfegf8TkY";
 
 // MQTT values suitable for your network.
-const char* MQTT_HOST = "192.168.1.34";
-const int MQTT_PORT = 1885;
+const char* MQTT_HOST = "192.168.1.38";
+const int MQTT_PORT = 1883;
 const char* MQTT_USERNAME = "admin";
 const char* MQTT_PASSWORD = "uniovi";
 const char* MQTT_CLIENT_ID = "ARD01";
@@ -177,7 +179,8 @@ void reconnect() {
     Serial.print("Attempting MQTT connection...");
     
     // Attempt to connect
-    if (client.connect(MQTT_CLIENT_ID, MQTT_USERNAME, MQTT_PASSWORD)) {
+    //if (client.connect(MQTT_CLIENT_ID, MQTT_USERNAME, MQTT_PASSWORD)) {
+    if (client.connect(MQTT_CLIENT_ID)) {
       Serial.println("connected");
       
       // Once connected, publish an announcement...
