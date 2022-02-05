@@ -1,7 +1,7 @@
 # Arduino boards: install esp8266 arduino board:
 
-* Start Arduino and open Preferences window
-* Enter http://arduino.esp8266.com/stable/package_esp8266com_index.json into Additional Board. Manager URLs field. You can add multiple URLs, separating them with commas from **File -> Preferences** form
+* Start Arduino and open Preferences from **File -> Preferences**
+* Enter the ESP8266 Repository link [http://arduino.esp8266.com/stable/package_esp8266com_index.json](http://arduino.esp8266.com/stable/package_esp8266com_index.json) into **Additional Board Manager URLs field** field. You can add multiple URLs, separating them with commas:
 
 ![Board Repositories](captures/board_repositories.png "Board Repositories")
 
