@@ -19,20 +19,25 @@
 
 Add arduino dependencies before compile your sketch
 
-## MQTT Arduino client: knolleary/pubsubclient 
+## MQTT Arduino client from knolleary/pubsubclient 
 
 * Download pubsubclient-2.7.zip from [pub-sub-client](https://www.arduinolibraries.info/libraries/pub-sub-client)
 The sources from [github pub-sub-client](https://github.com/knolleary/pubsubclient).
 * Select Arduino menu option: **Sketch -> Include Libraries -> Add Zip Library** and select previous zip library
 
-
-## Arduino dependencies: install sparkfun/SparkFun_RHT03_Arduino_Library RHT03 Arduino driver
+## RHT03 Arduino driver from sparkfun/SparkFun_RHT03_Arduino_Library 
 
 * Download SparkFun_RHT03_Arduino_Library-V_1.0.0.zip from [SparkFun_RHT03_Arduino Repository](https://github.com/sparkfun/SparkFun_RHT03_Arduino_Library) 
 * Select Arduino menu option: **Sketch Include Libraries -> Add Library** and select zip file
 
-## Arduino dependencies: install Arduino JSON dependency
+## Arduino JSON dependency from Arduino libraries management list
 
 * From Arduino Library Manager **Sketch -> Include Libraries -> Manage Libraries..** install version 5.13.4 the last 5 version
 
 ![ArduinoJSON Dependency](captures/ArduinoJSON.png "ArduinoJSON Dependency")
+
+## Arduino DS1302 dependency from Arduino 
+
+* Download arduino-ds1302.zip from [arduino-ds1302](https://github.com/msparks/arduino-ds1302)
+The sources from [arduino-ds1302](https://github.com/msparks/arduino-ds1302).
+* Select Arduino menu option: **Sketch -> Include Libraries -> Add Zip Library** and select previous zip library
