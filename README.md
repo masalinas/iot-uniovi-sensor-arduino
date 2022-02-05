@@ -28,7 +28,7 @@ The sources from [github pub-sub-client](https://github.com/knolleary/pubsubclie
 ## Arduino RHT03 driver from sparkfun/SparkFun_RHT03_Arduino_Library respository
 
 * Download SparkFun_RHT03_Arduino_Library-V_1.0.0.zip from [SparkFun_RHT03_Arduino Repository](https://github.com/sparkfun/SparkFun_RHT03_Arduino_Library) 
-* Select Arduino menu option: **Sketch Include Libraries -> Add Library** and select zip file
+* Select Arduino menu option: **Sketch -> Include Libraries -> Add Zip Library** and select zip file
 
 ## Arduino JSON dependency from Arduino libraries management list
 
