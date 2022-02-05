@@ -23,12 +23,12 @@ Add arduino dependencies before compile your sketch
 
 * Download pubsubclient-2.7.zip from [pub-sub-client](https://www.arduinolibraries.info/libraries/pub-sub-client)
 The sources from [github pub-sub-client](https://github.com/knolleary/pubsubclient).
-* Select Arduino menu option: **Sketch -> Include Libraries -> Add Zip Library** and select previous zip library
+* Select Arduino menu option: **Sketch -> Include Libraries -> Add Zip Library** and select previous zip file
 
 ## Arduino RHT03 driver from sparkfun/SparkFun_RHT03_Arduino_Library respository
 
 * Download SparkFun_RHT03_Arduino_Library-V_1.0.0.zip from [SparkFun_RHT03_Arduino Repository](https://github.com/sparkfun/SparkFun_RHT03_Arduino_Library) 
-* Select Arduino menu option: **Sketch -> Include Libraries -> Add Zip Library** and select zip file
+* Select Arduino menu option: **Sketch -> Include Libraries -> Add Zip Library** and select previous zip file
 
 ## Arduino JSON dependency from Arduino libraries management list
 
@@ -40,4 +40,4 @@ The sources from [github pub-sub-client](https://github.com/knolleary/pubsubclie
 
 * Download arduino-ds1302.zip from [arduino-ds1302](https://github.com/msparks/arduino-ds1302)
 The sources from [arduino-ds1302](https://github.com/msparks/arduino-ds1302).
-* Select Arduino menu option: **Sketch -> Include Libraries -> Add Zip Library** and select previous zip library
+* Select Arduino menu option: **Sketch -> Include Libraries -> Add Zip Library** and select previous zip file
