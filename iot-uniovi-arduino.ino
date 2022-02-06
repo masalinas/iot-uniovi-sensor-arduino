@@ -31,13 +31,13 @@
 #include <DS1302.h>
 
 // WIFI values suitable for your network.
-//const char* WIFI_SSID = "Thingtrack";
-//const char* WIFI_PASSWORD = "234803685";
-const char* WIFI_SSID = "maiind";
-const char* WIFI_PASSWORD = "tullavealfuturo";
+const char* WIFI_SSID = "MOVISTAR_0849";
+const char* WIFI_PASSWORD = "Uufiyu7Wv3QGfegf8TkY";
+//const char* WIFI_SSID = "maiind";
+//const char* WIFI_PASSWORD = "tullavealfuturo";
 
 // MQTT values suitable for your network.
-const char* MQTT_HOST = "192.168.1.38";
+const char* MQTT_HOST = "192.168.1.55";
 const int MQTT_PORT = 1883;
 const char* MQTT_USERNAME = "admin";
 const char* MQTT_PASSWORD = "uniovi";
@@ -59,7 +59,7 @@ PubSubClient client(espClient);
 
 long lastMsg = 0;
 char msg[50];
-int value = 0;
+int value = 0;  
 RHT03 rht;
 
 const int kCePin   = D1;  // Chip Enable
@@ -109,7 +109,7 @@ void setup_wifi() {
 }
 
 void setup_time() {
-// Initialize a new chip by turning off write protection and clearing the
+  // Initialize a new chip by turning off write protection and clearing the
   // clock halt flag. These methods needn't always be called. See the DS1302
   // datasheet for details.
   rtc.writeProtect(false);
@@ -150,7 +150,7 @@ float* getSensorData() {
   
   // If successful, the update() function will return 1.
   // If update fails, it will return a value <0
-  float data[3];
+  static float data[3];
   if (updateRet == 1) {
       Serial.println("RHT03 pin updated");
       
@@ -179,8 +179,8 @@ void reconnect() {
     Serial.print("Attempting MQTT connection...");
     
     // Attempt to connect
-    //if (client.connect(MQTT_CLIENT_ID, MQTT_USERNAME, MQTT_PASSWORD)) {
-    if (client.connect(MQTT_CLIENT_ID)) {
+    if (client.connect(MQTT_CLIENT_ID, MQTT_USERNAME, MQTT_PASSWORD)) {
+    //if (client.connect(MQTT_CLIENT_ID)) {
       Serial.println("connected");
       
       // Once connected, publish an announcement...
@@ -264,6 +264,6 @@ void loop() {
     //String input = "{\"device\":\"TP01\",\"time\":1351824120,\"value\":" + charMeassure + "]}";
     
     client.publish(MQTT_TOPIC_SENSOR_TP01, sensorJSONmessageBuffer);
-    //client.publish(MQTT_TOPIC_SENSOR_TP01, charMeassure);   
+    //client.publish(MQTT_TOPIC_SENSOR_TP01, charMeassure);
   }
 }
