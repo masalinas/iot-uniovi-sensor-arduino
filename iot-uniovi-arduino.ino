@@ -117,10 +117,10 @@ void setup_time() {
 
   // Make a new time object to set the date and time.
   // Saturday, Februry 23, 2019 at 10:45:00.
-  //Time t(2019, 2, 23, 10, 54, 00, Time::kSaturday);
+  Time t(2021, 2, 7, 19, 01, 00, Time::kSaturday);
 
   // Set the time and date on the chip.
-  //rtc.time(t);
+  rtc.time(t);
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
