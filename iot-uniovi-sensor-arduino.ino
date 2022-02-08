@@ -116,8 +116,7 @@ void setup_time() {
   rtc.halt(false);
 
   // Make a new time object to set the date and time.
-  // Saturday, Februry 23, 2019 at 10:45:00.
-  Time t(2021, 2, 7, 19, 01, 00, Time::kSaturday);
+  Time t(2022, 2, 8, 22, 44, 00, Time::kSaturday);
 
   // Set the time and date on the chip.
   rtc.time(t);
@@ -263,7 +262,6 @@ void loop() {
     temperatureJSON.printTo(sensorJSONmessageBuffer, sizeof(sensorJSONmessageBuffer));
     //String input = "{\"device\":\"TP01\",\"time\":1351824120,\"value\":" + charMeassure + "]}";
     
-    client.publish(MQTT_TOPIC_SENSOR_TP01, sensorJSONmessageBuffer);
-    //client.publish(MQTT_TOPIC_SENSOR_TP01, charMeassure);
+    client.publish(MQTT_TOPIC_SENSOR_TP01, sensorJSONmessageBuffer);    
   }
 }
