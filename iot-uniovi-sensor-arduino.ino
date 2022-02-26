@@ -31,13 +31,13 @@
 #include <DS1302.h>
 
 // WIFI values suitable for your network.
-const char* WIFI_SSID = "MOVISTAR_0849";
-const char* WIFI_PASSWORD = "Uufiyu7Wv3QGfegf8TkY";
-//const char* WIFI_SSID = "maiind";
-//const char* WIFI_PASSWORD = "tullavealfuturo";
+//const char* WIFI_SSID = "MOVISTAR_0849";
+//const char* WIFI_PASSWORD = "Uufiyu7Wv3QGfegf8TkY";
+const char* WIFI_SSID = "maiind";
+const char* WIFI_PASSWORD = "tullavealfuturo";
 
 // MQTT values suitable for your network.
-const char* MQTT_HOST = "192.168.1.55";
+const char* MQTT_HOST = "192.168.1.167";
 const int MQTT_PORT = 1883;
 const char* MQTT_USERNAME = "admin";
 const char* MQTT_PASSWORD = "uniovi";
